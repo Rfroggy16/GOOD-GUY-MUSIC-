@@ -1,33 +1,33 @@
-# Good Guy Music — updated website preview
+# Good Guy Music — no-database website and personal Owner Studio
 
-The website preserves the original gold/charcoal design and typography. Logos, CSS, and JavaScript are embedded in the generated page, so brand images do not rely on relative file paths.
+## Your release workflow
 
-## Owner Studio
+1. Keep Owner Studio on your own device. It is a personal editing tool, not a protected online admin dashboard. Do not deploy studio files, source templates, or library backups to public hosting.
+2. Add beat details, USD prices, license terms, and tagged audio previews. The studio saves them in browser storage (IndexedDB), not a paid server database. Clearing site data can delete your library. Changing browser, device, or origin can make it unavailable.
+3. Select **Preview my website** to see the customer page generated from your saved beats.
+4. Select **Export customer website** to download a complete `index.html`. Publish only that exported page to your static host. Repeat after every catalog change: edits are not automatically published.
+5. Export a separate library backup and keep it private. Restore it when moving browsers or computers.
 
-Owner Studio is a separate page from the public website. There is no owner button or editing form on the customer-facing page. Add tagged audio previews, titles, genres, BPM, musical keys, USD prices, license names, and terms in the studio. Edit or delete beats from the library. Select **Preview Website** to open the customer view. Adding your first beat replaces the sample collection in that browser. Export and restore backups to protect your data.
+## Customer website
 
-Both pages share browser-local storage when served together on the same origin. The public page loads the catalog on navigation and when its tab regains focus. This is not a shared online database.
-
-The public page is the root `index.html`; the owner page is `studio/index.html`. Each embeds its required code and images. The build script preserves its input in `site.template.html` and regenerates both. The public build contains no beat-management handlers. The studio's no-index hint is not access control.
-
-This is a **browser-local editing workspace**, not an authenticated online administration system. Audio previews and beat details persist in IndexedDB only on the same browser and origin. Other visitors do not see owner changes. Clearing site storage deletes them. Export a backup before switching browsers, publishing, or clearing data.
+The exported page embeds the catalog, tagged audio previews, supplied logos, CSS, and JavaScript. It works independently of Owner Studio and does not contain editing controls, checkout URLs, or database dependencies. Fonts load online with local fallbacks. The starting catalog is empty: no fake beats are published.
 
 ## Payments
 
-You can attach your own HTTPS Stripe, PayPal, or Square hosted payment link to a beat. The licensing dialog then links to that provider's checkout. Without a link, the beat is inquiry-only. Prices and license terms must match what you configure at the payment provider.
+Purchasing is **coming soon**. There are no active payment buttons. PayPal is the intended future provider; no account or checkout is connected yet. Old links in imported backups are not activated and are omitted from customer exports.
 
-The website does not collect card data, verify payments, unlock downloads, or deliver files automatically. Only tagged public previews should be uploaded; never upload master files or stems. Payment receipt checks and file delivery remain the owner's responsibility until a production integration is implemented.
+After PayPal setup, verify payments in PayPal before manually sending the purchased beat and license. This version does not verify payments, collect cards, unlock downloads, or deliver files automatically.
 
-A live store still requires a shared backend, secure owner authentication, preview-file storage, private delivery-file storage, a payment-provider account, verified payment callbacks, and a license/delivery workflow. The separate studio route is not protected yet. Do not treat it as production authentication. A next-steps checklist is included in the studio.
+## File safety
 
-## Merch
+Upload tagged public previews only. Never upload masters or stems: every file embedded in the customer page is publicly accessible. MP3, WAV, OGG, and M4A previews are supported up to 20 MB each. Short compressed MP3 previews keep exports manageable. A large catalog creates a large page, and your host may have its own file-size limits.
 
-The merch section remains visible with a prominent **Coming soon** announcement and badges on each concept. Merch dialogs do not offer shopping or inquiry buttons. Concept designs are not confirmed products or inventory.
+## Merch and contact
 
-## Contact
-
-The existing project brief form downloads a local text file. It does not send an email.
+Merch stays visible as coming-soon concepts with no purchase controls. The contact form downloads a local project brief and does not send email.
 
 ## Included source
 
-The standalone page is generated from the source CSS, JavaScript, and brand images using the included build script. No payment credentials or master music files are included.
+The build script generates the starting customer page and studio from the included source template, CSS, JavaScript, and supplied assets. Keep all source and studio files private. Only the exported customer `index.html` should be published.
+
+Creating these files does not deploy a live website.
