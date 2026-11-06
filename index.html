@@ -142,10 +142,15 @@ document.querySelector('#contact-form').addEventListener('submit',event=>{
 document.querySelector('#year').textContent=new Date().getFullYear();renderTracks();
 function formatTime(value){return `${Math.floor(value/60)}:${String(Math.floor(value%60)).padStart(2,'0')}`;}
 
-const catalog=JSON.parse(document.querySelector('#published-catalog').textContent);
-beats=catalog;renderTracks();
-document.querySelector('#collection-label').textContent='BEAT COLLECTION';
-document.querySelector('#collection-note').textContent='Purchasing coming soon. PayPal checkout will be added later.';
-if(!catalog.length){document.querySelector('#empty').hidden=false;document.querySelector('#empty').textContent='New beats are on the way. Check back for the first drop.';}</script>
+async function loadPublishedCatalog(){
+  const embedded=JSON.parse(document.querySelector('#published-catalog').textContent);
+  beats=embedded;renderTracks();
+  try{
+    if(!embedded.length){const response=await fetch('./catalog.json',{cache:'no-store'});if(!response.ok)throw new Error('Catalog unavailable');const catalog=await response.json();if(!Array.isArray(catalog))throw new Error('Invalid catalog');beats=catalog;renderTracks();}
+    document.querySelector('#collection-label').textContent='BEAT COLLECTION';document.querySelector('#collection-note').textContent='Purchasing coming soon. PayPal checkout will be added later.';
+    if(!beats.length){document.querySelector('#empty').hidden=false;document.querySelector('#empty').textContent='New beats are on the way. Check back for the first drop.';}
+  }catch{document.querySelector('#empty').hidden=false;document.querySelector('#empty').textContent='The beat catalog could not load. Please refresh and try again.';}
+}
+loadPublishedCatalog();</script>
 </body>
 </html>

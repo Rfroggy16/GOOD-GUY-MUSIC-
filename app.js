@@ -150,7 +150,7 @@ function createCustomerPage(){
   return template.replace(/(<script type="application\/json" id="published-catalog">)[\s\S]*?(<\/script>)/,()=>`<script type="application/json" id="published-catalog">${data}</script>`);
 }
 document.querySelector('#export-site')?.addEventListener('click',()=>{
-  try{const html=createCustomerPage();const url=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download='index.html';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);document.querySelector('#publish-status').textContent='Customer website downloaded. Publish this index.html only — keep Owner Studio and library backups private. Your hosted site changes only after you upload this export.';}catch{document.querySelector('#publish-status').textContent='Could not export your website. Please reload the studio and try again.';}
+  exportWebsiteZip();
 });
 document.querySelector('#preview-site')?.addEventListener('click',()=>{
   const url=URL.createObjectURL(new Blob([createCustomerPage()],{type:'text/html;charset=utf-8'}));window.open(url,'_blank','noopener');setTimeout(()=>URL.revokeObjectURL(url),60000);
