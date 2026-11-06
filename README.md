@@ -4,7 +4,11 @@ The website preserves the original gold/charcoal design and typography. Logos, C
 
 ## Owner Studio
 
-Select **Owner Studio** in the footer to add a tagged audio preview, title, genre, BPM, musical key, USD license price, license name, and license terms. Edit or delete beats from the library. Adding your first beat replaces the sample collection in that browser. Export and restore catalog backups to protect your data.
+Owner Studio is a separate page from the public website. There is no owner button or editing form on the customer-facing page. Add tagged audio previews, titles, genres, BPM, musical keys, USD prices, license names, and terms in the studio. Edit or delete beats from the library. Select **Preview Website** to open the customer view. Adding your first beat replaces the sample collection in that browser. Export and restore backups to protect your data.
+
+Both pages share browser-local storage when served together on the same origin. The public page loads the catalog on navigation and when its tab regains focus. This is not a shared online database.
+
+The public page is the root `index.html`; the owner page is `studio/index.html`. Each embeds its required code and images. The build script preserves its input in `site.template.html` and regenerates both. The public build contains no beat-management handlers. The studio's no-index hint is not access control.
 
 This is a **browser-local editing workspace**, not an authenticated online administration system. Audio previews and beat details persist in IndexedDB only on the same browser and origin. Other visitors do not see owner changes. Clearing site storage deletes them. Export a backup before switching browsers, publishing, or clearing data.
 
@@ -14,7 +18,7 @@ You can attach your own HTTPS Stripe, PayPal, or Square hosted payment link to a
 
 The website does not collect card data, verify payments, unlock downloads, or deliver files automatically. Only tagged public previews should be uploaded; never upload master files or stems. Payment receipt checks and file delivery remain the owner's responsibility until a production integration is implemented.
 
-A live store still requires a shared backend, secure owner authentication, preview-file storage, private delivery-file storage, a payment-provider account, verified payment callbacks, and a license/delivery workflow. Do not treat the local owner workspace as production authentication.
+A live store still requires a shared backend, secure owner authentication, preview-file storage, private delivery-file storage, a payment-provider account, verified payment callbacks, and a license/delivery workflow. The separate studio route is not protected yet. Do not treat it as production authentication. A next-steps checklist is included in the studio.
 
 ## Merch
 

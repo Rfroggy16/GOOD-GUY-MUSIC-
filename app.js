@@ -86,8 +86,8 @@ async function transact(mode,operation){await databaseReady;return new Promise((
 async function refreshLibrary(){
   savedBeats=await transact('readonly',store=>store.getAll());
   savedBeats.sort((a,b)=>b.updated-a.updated);beats=savedBeats.length?savedBeats:[...demoBeats];renderTracks();
-  document.querySelector('#collection-label').textContent=savedBeats.length?'YOUR BEAT COLLECTION':'DEMO COLLECTION';
-  document.querySelector('#collection-note').textContent=savedBeats.length?'Local preview of your catalog. Hosted checkout opens only when you add a payment link.':'Sample beats for the design preview. Add your own from Owner studio.';
+  if(document.querySelector('#collection-label'))document.querySelector('#collection-label').textContent=savedBeats.length?'YOUR BEAT COLLECTION':'DEMO COLLECTION';
+  if(document.querySelector('#collection-note'))document.querySelector('#collection-note').textContent=savedBeats.length?'Local preview of your catalog. Hosted checkout opens only when you add a payment link.':'Sample beats for the design preview. Add your own from Owner studio.';
   document.querySelector('#owner-beats').innerHTML=savedBeats.length?savedBeats.map(b=>`<article class="owner-beat"><div><strong>${escapeHTML(b.title)}</strong><span>$${Number(b.price).toFixed(2)} USD · ${escapeHTML(b.license)}</span><small>${b.checkout?'Hosted checkout link added':'No checkout link — inquiry only'}</small></div><div class="owner-beat-actions"><button class="track-action" data-edit="${b.id}">Edit</button><button class="track-action" data-delete="${b.id}">Delete</button></div></article>`).join(''):'<p class="library-empty">Your library is empty. Add your first beat and set your price.</p>';
 }
 function validateCheckout(value){
@@ -111,8 +111,8 @@ function readPreview(file){return new Promise((resolve,reject)=>{
   const reader=new FileReader();reader.onload=()=>resolve(`data:${supported[extension]};base64,${String(reader.result).split(',')[1]}`);reader.onerror=()=>reject(new Error('Could not read that audio file. Try selecting it again.'));reader.readAsDataURL(file);
 });}
 function resetBeatForm(){ownerForm.reset();ownerForm.elements.id.value='';document.querySelector('#beat-form-title').textContent='Add a beat';document.querySelector('#beat-cancel').hidden=true;document.querySelector('#beat-save').textContent='SAVE BEAT IN THIS BROWSER ↗';}
-document.querySelector('#owner-open').addEventListener('click',()=>{document.querySelector('#owner').hidden=false;document.querySelector('#owner').scrollIntoView({behavior:'smooth'});});
-document.querySelector('#owner-close').addEventListener('click',()=>{document.querySelector('#owner').hidden=true;document.querySelector('#owner-open').focus();});
+document.querySelector('#owner-open')?.addEventListener('click',()=>{document.querySelector('#owner').hidden=false;document.querySelector('#owner').scrollIntoView({behavior:'smooth'});});
+document.querySelector('#owner-close')?.addEventListener('click',()=>{document.querySelector('#owner').hidden=true;document.querySelector('#owner-open').focus();});
 document.querySelector('#beat-cancel').addEventListener('click',resetBeatForm);
 ownerForm.addEventListener('submit',async event=>{
   event.preventDefault();const button=document.querySelector('#beat-save'),status=document.querySelector('#beat-status');button.disabled=true;status.textContent='Saving your beat…';
@@ -120,7 +120,7 @@ ownerForm.addEventListener('submit',async event=>{
     const data=new FormData(ownerForm), existing=savedBeats.find(b=>b.id===data.get('id')), file=data.get('preview');
     const preview=file?.size?await readPreview(file):existing?.preview;
     const beat=validateBeat({id:existing?.id||crypto.randomUUID(),title:data.get('title'),mood:data.get('mood'),genre:data.get('genre'),bpm:Number(data.get('bpm')),key:data.get('key'),price:Number(data.get('price')),license:data.get('license'),terms:data.get('terms'),preview,checkout:data.get('checkout').trim()});
-    await transact('readwrite',store=>store.put(beat));stopAudio();filter='All';query='';document.querySelector('#search').value='';document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b.dataset.filter==='All');b.setAttribute('aria-pressed',String(b.dataset.filter==='All'));});await refreshLibrary();resetBeatForm();status.textContent='Saved in this browser. Your beat and price are now visible in the local store preview. Export a backup to keep a copy.';
+    await transact('readwrite',store=>store.put(beat));stopAudio();filter='All';query='';if(document.querySelector('#search'))document.querySelector('#search').value='';document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b.dataset.filter==='All');b.setAttribute('aria-pressed',String(b.dataset.filter==='All'));});await refreshLibrary();resetBeatForm();status.textContent='Saved in this browser. Open Preview Website to see your beat and price on the separate public site. Export a backup to keep a copy.';
   }catch(error){status.textContent=error.message||'Could not save the beat. Your browser storage may be full.';}finally{button.disabled=false;}
 });
 document.querySelector('#owner-beats').addEventListener('click',async event=>{
