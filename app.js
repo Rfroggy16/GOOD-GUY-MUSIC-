@@ -31,9 +31,9 @@ async function playBeat(index){
   stopAudio();
   try{
     if(beats[index].preview){
-      const beat=beats[index];uploadedAudio=new Audio(beat.preview);await uploadedAudio.play();active=index;renderTracks();document.querySelector('#playing-title').textContent=beat.title;document.querySelector('#player div>span').textContent='TAGGED AUDIO PREVIEW';document.querySelector('#player').hidden=false;uploadedAudio.addEventListener('ended',stopAudio);timer=setInterval(()=>{if(!uploadedAudio)return;const current=uploadedAudio.currentTime,duration=uploadedAudio.duration;if(Number.isFinite(duration)){document.querySelector('#progress-bar').style.width=`${current/duration*100}%`;document.querySelector('#player-time').textContent=`${formatTime(current)} / ${formatTime(duration)}`;}},100);return;
+      const beat=beats[index];uploadedAudio=new Audio(beat.preview);uploadedAudio.volume=Number(document.querySelector('#player-volume').value);await uploadedAudio.play();active=index;renderTracks();document.querySelector('#playing-title').textContent=beat.title;document.querySelector('#playing-kind').textContent='TAGGED AUDIO PREVIEW';document.querySelector('#player').hidden=false;document.querySelector('#player-toggle').textContent='Ⅱ';document.querySelector('#player-toggle').setAttribute('aria-label','Pause preview');document.querySelector('#player-seek').value=0;uploadedAudio.addEventListener('ended',stopAudio);timer=setInterval(()=>{if(!uploadedAudio)return;const current=uploadedAudio.currentTime,duration=uploadedAudio.duration;if(Number.isFinite(duration)){document.querySelector('#progress-bar').style.width=`${current/duration*100}%`;document.querySelector('#player-seek').value=current/duration*100;document.querySelector('#player-time').textContent=`${formatTime(current)} / ${formatTime(duration)}`;}},100);return;
     }
-    document.querySelector('#player div>span').textContent='GENERATED DEMO PREVIEW';
+    document.querySelector('#playing-kind').textContent='GENERATED DEMO PREVIEW';
     audio ||= new (window.AudioContext||window.webkitAudioContext)();
     await audio.resume();
     const beat=beats[index], now=audio.currentTime+.05, step=60/beat.bpm/2, duration=12;
@@ -55,7 +55,11 @@ async function playBeat(index){
 }
 tracks.addEventListener('click',event=>{const play=event.target.closest('[data-play]'), detail=event.target.closest('[data-beat]');if(play)playBeat(Number(play.dataset.play));if(detail){const b=beats[Number(detail.dataset.beat)];openDetail(`${b.license||'Preview'} / $${Number(b.price||0).toFixed(2)} USD`,b.title,`${b.genre} · ${b.bpm} BPM · ${b.key}\n\n${b.terms||b.mood}\n\nPurchasing coming soon. PayPal checkout is not connected yet. No payment can be taken on this website.`,'Beat licensing');document.querySelector('#dialog-inquiry').hidden=true;}});
 document.querySelector('#player-close').addEventListener('click',stopAudio);
-document.querySelector('#player-toggle').addEventListener('click',stopAudio);
+document.querySelector('#player-toggle').addEventListener('click',async()=>{if(!uploadedAudio){stopAudio();return;}try{if(uploadedAudio.paused){await uploadedAudio.play();}else uploadedAudio.pause();const paused=uploadedAudio.paused;document.querySelector('#player-toggle').textContent=paused?'▶':'Ⅱ';document.querySelector('#player-toggle').setAttribute('aria-label',paused?'Resume preview':'Pause preview');}catch{stopAudio();}});
+document.querySelector('#player-prev').addEventListener('click',()=>{if(active>=0)playBeat((active-1+beats.length)%beats.length);});
+document.querySelector('#player-next').addEventListener('click',()=>{if(active>=0)playBeat((active+1)%beats.length);});
+document.querySelector('#player-seek').addEventListener('input',event=>{if(uploadedAudio&&Number.isFinite(uploadedAudio.duration))uploadedAudio.currentTime=uploadedAudio.duration*Number(event.target.value)/100;});
+document.querySelector('#player-volume').addEventListener('input',event=>{if(uploadedAudio)uploadedAudio.volume=Number(event.target.value);});
 const dialog=document.querySelector('#detail-dialog');
 function openDetail(category,title,description,service,project=''){
   const link=document.querySelector('#dialog-inquiry');link.hidden=false;link.href='#contact';link.removeAttribute('target');link.removeAttribute('rel');link.textContent='START AN INQUIRY ↗';
@@ -70,7 +74,9 @@ toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');tog
 nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation');}));
 document.querySelector('#contact-form').addEventListener('submit',event=>{
   event.preventDefault();const data=new FormData(event.target);const brief=`GOOD GUY MUSIC — PROJECT BRIEF\n\nName: ${data.get('name')}\nEmail: ${data.get('email')}\nService: ${data.get('service')}\n\nProject details:\n${data.get('project')}\n\nSaved locally from the website preview. This inquiry has not been sent.\n`;
-  const url=URL.createObjectURL(new Blob([brief],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='Good-Guy-Music-Project-Brief.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);document.querySelector('#form-status').textContent='Your project brief is downloaded. Keep it handy — no inquiry has been sent.';
+  const body=`Name: ${data.get('name')}\nEmail: ${data.get('email')}\nService: ${data.get('service')}\n\nProject details:\n${data.get('project')}`;
+  const href=`mailto:goodguybyryan@gmail.com?subject=${encodeURIComponent('Good Guy Music — '+data.get('service')+' inquiry')}&body=${encodeURIComponent(body)}`;
+  const link=document.createElement('a');link.href=href;link.click();document.querySelector('#form-status').textContent='Your email app should open with the project draft. Review it and press Send there. If nothing opens, email goodguybyryan@gmail.com directly. This website has not sent an email.';
 });
 document.querySelector('#year').textContent=new Date().getFullYear();renderTracks();
 function formatTime(value){return `${Math.floor(value/60)}:${String(Math.floor(value%60)).padStart(2,'0')}`;}

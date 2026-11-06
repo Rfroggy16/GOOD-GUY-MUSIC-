@@ -24,7 +24,15 @@ Upload tagged public previews only. Never upload masters or stems: every file em
 
 ## Merch and contact
 
-Merch stays visible as coming-soon concepts with no purchase controls. The contact form downloads a local project brief and does not send email.
+Merch stays visible as coming-soon concepts with no purchase controls. Collaboration and project inquiries open a prefilled email draft addressed to goodguybyryan@gmail.com. Visitors review and send it in their email application. The website does not send email automatically. A direct email link is included for visitors without a configured mail application.
+
+## Media player
+
+The floating player uses a rounded charcoal interface with gold accents, track details, previous/next controls, pause/resume, seek, and desktop volume. Mobile layout keeps playback and seeking accessible. Controls operate on the uploaded public previews. No additional media services are required.
+
+## Replacing repeated uploads
+
+The current studio still exports HTML; it is not connected to hosting. A static site can avoid manual reuploads without a database by connecting a private publishing service or Git-backed CMS to a static host. The owner publishes catalog changes through that authenticated service, which updates files and triggers deployment. Tagged previews should live in public file/object storage rather than being repeatedly embedded in a large HTML page. This requires choosing the hosting account, authorized deployment integration, and preview storage. Never place hosting tokens in the public site or browser JavaScript. Direct email sending can similarly use a hosted form service or a small serverless endpoint, without a database, once configured.
 
 ## Included source
 
