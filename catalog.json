@@ -10,7 +10,9 @@
     "license": "MP3 lease",
     "terms": "Explicitly owned by Good Guy Music and is not to be used for commercial purpose only on you tube and Soundcloud and under producer add Good Guy Music and contrary to this you will be charged by copyright law 2026 © Good Guy Music 2026",
     "cover": 3,
-    "preview": "audio/48ddaac5-0609-4ca6-b627-96f1d46557ae.mp3"
+    "preview":"./48ddaac5-0609-4ca6-b627-96f1d46557ae.mp3"
+
+
   },
   {
     "id": "a624ef0f-36e1-49a5-8129-7c8535d17121",
@@ -23,6 +25,6 @@
     "license": "MP3 lease",
     "terms": "This Beat is under copyright of Good Guy Music and can only be used for Youtube and Souncloud and under the producer tag Good Guy Music",
     "cover": 3,
-    "preview": "audio/a624ef0f-36e1-49a5-8129-7c8535d17121.mp3"
-  }
+    "preview":"./a624ef0f-36e1-49a5-8129-7c8535d17121.mp3"
+
 ]
