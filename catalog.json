@@ -1,5 +1,18 @@
 [
   {
+    "id": "4af00bcb-c872-4c85-9e95-36fedbb315ed",
+    "title": "Good Guy",
+    "mood": "Goodie",
+    "genre": "Trap",
+    "bpm": 120,
+    "key": "b",
+    "price": 40.99,
+    "license": "MP3 lease",
+    "terms": "This beat is for lease only on you tube and Soundcloud and for the video add my producer tag Good Guy Music",
+    "cover": 3,
+    "preview": "audio/4af00bcb-c872-4c85-9e95-36fedbb315ed.mp3"
+  },
+  {
     "id": "6d6b3b8b-4612-4a80-bfb9-51e94ec6e33b",
     "title": "Bad Guy",
     "mood": "Baddie",
